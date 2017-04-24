@@ -14,7 +14,9 @@ public class UserInterface extends javax.swing.JFrame {
      * Creates new form UserInterface
      */
     public UserInterface() {
+        
         initComponents();
+        //setExtendedState(MAXIMIZED_BOTH);
     }
 
     /**
@@ -26,48 +28,199 @@ public class UserInterface extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        program_header = new javax.swing.JLabel();
+        cmbBox_osgbList = new javax.swing.JComboBox<>();
+        hakkinda = new javax.swing.JScrollPane();
+        txt_hakkinda = new javax.swing.JTextArea();
+        tabbed_menu = new javax.swing.JTabbedPane();
+        tab_hekim = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        list_hekim = new javax.swing.JList<>();
+        info_hekim = new javax.swing.JPanel();
+        lbl_ad_soyad = new javax.swing.JLabel();
+        lbl_unvan = new javax.swing.JLabel();
+        tab_uzman = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        tab_firma = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setExtendedState(1);
+        setSize(new java.awt.Dimension(10, 10));
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel1.setText(" Ortak Sağlık ve Güvenlik Birimi Etkinlikleri Sistemi ");
+        program_header.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        program_header.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        program_header.setText(" Ortak Sağlık ve Güvenlik Birimi Etkinlikleri Sistemi ");
 
-        jButton1.setText("GÖRÜNTÜLE");
+        cmbBox_osgbList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbBox_osgbList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OSGB 1", "OSGB 2", "OSGB 3" }));
+        cmbBox_osgbList.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbBox_osgbListItemStateChanged(evt);
+            }
+        });
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OSGB 1", "OSGB 2", "OSGB 3" }));
+        txt_hakkinda.setEditable(false);
+        txt_hakkinda.setColumns(20);
+        txt_hakkinda.setLineWrap(true);
+        txt_hakkinda.setRows(5);
+        txt_hakkinda.setText("buraya secilmis olan OSGB hakkinda bilgiler gelecek");
+        txt_hakkinda.setWrapStyleWord(true);
+        hakkinda.setViewportView(txt_hakkinda);
+
+        tabbed_menu.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        list_hekim.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        list_hekim.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Hekim 1", "Hekim 2", "Hekim 3", "Hekim 4" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        list_hekim.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        list_hekim.setToolTipText("");
+        list_hekim.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                list_hekimValueChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(list_hekim);
+
+        info_hekim.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        lbl_ad_soyad.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lbl_ad_soyad.setText("Hekim Ad Soyad");
+
+        lbl_unvan.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lbl_unvan.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_unvan.setText("Ünvan:");
+
+        javax.swing.GroupLayout info_hekimLayout = new javax.swing.GroupLayout(info_hekim);
+        info_hekim.setLayout(info_hekimLayout);
+        info_hekimLayout.setHorizontalGroup(
+            info_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, info_hekimLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(lbl_unvan, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(lbl_ad_soyad, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(62, Short.MAX_VALUE))
+        );
+        info_hekimLayout.setVerticalGroup(
+            info_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(info_hekimLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(info_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbl_ad_soyad, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(lbl_unvan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout tab_hekimLayout = new javax.swing.GroupLayout(tab_hekim);
+        tab_hekim.setLayout(tab_hekimLayout);
+        tab_hekimLayout.setHorizontalGroup(
+            tab_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tab_hekimLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(info_hekim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        tab_hekimLayout.setVerticalGroup(
+            tab_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tab_hekimLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(tab_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(info_hekim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        tabbed_menu.addTab("Hekimler", null, tab_hekim, "Bünyesindeki Hekimler");
+
+        jLabel3.setText("Something 2");
+
+        javax.swing.GroupLayout tab_uzmanLayout = new javax.swing.GroupLayout(tab_uzman);
+        tab_uzman.setLayout(tab_uzmanLayout);
+        tab_uzmanLayout.setHorizontalGroup(
+            tab_uzmanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tab_uzmanLayout.createSequentialGroup()
+                .addContainerGap(486, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addGap(160, 160, 160))
+        );
+        tab_uzmanLayout.setVerticalGroup(
+            tab_uzmanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tab_uzmanLayout.createSequentialGroup()
+                .addGap(95, 95, 95)
+                .addComponent(jLabel3)
+                .addContainerGap(178, Short.MAX_VALUE))
+        );
+
+        tabbed_menu.addTab("Uzmanlar", tab_uzman);
+
+        javax.swing.GroupLayout tab_firmaLayout = new javax.swing.GroupLayout(tab_firma);
+        tab_firma.setLayout(tab_firmaLayout);
+        tab_firmaLayout.setHorizontalGroup(
+            tab_firmaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 705, Short.MAX_VALUE)
+        );
+        tab_firmaLayout.setVerticalGroup(
+            tab_firmaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 287, Short.MAX_VALUE)
+        );
+
+        tabbed_menu.addTab("Firmalar", null, tab_firma, "Çalışılan firmalar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(program_header, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tabbed_menu)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cmbBox_osgbList, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(hakkinda)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                    .addComponent(jComboBox1))
-                .addGap(106, 106, 106))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(program_header, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(hakkinda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(cmbBox_osgbList, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(tabbed_menu)
+                .addContainerGap())
         );
+
+        tabbed_menu.getAccessibleContext().setAccessibleName("Uzmanlar");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cmbBox_osgbListItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbBox_osgbListItemStateChanged
+        // TODO add your handling code here:
+        
+        txt_hakkinda.setText(String.valueOf(cmbBox_osgbList.getSelectedItem()));
+    }//GEN-LAST:event_cmbBox_osgbListItemStateChanged
+
+    private void list_hekimValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_list_hekimValueChanged
+        // TODO add your handling code here:
+        lbl_ad_soyad.setText(list_hekim.getSelectedValue());
+        
+        
+    }//GEN-LAST:event_list_hekimValueChanged
 
     /**
      * @param args the command line arguments
@@ -105,8 +258,19 @@ public class UserInterface extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JComboBox<String> cmbBox_osgbList;
+    private javax.swing.JScrollPane hakkinda;
+    private javax.swing.JPanel info_hekim;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lbl_ad_soyad;
+    private javax.swing.JLabel lbl_unvan;
+    private javax.swing.JList<String> list_hekim;
+    private javax.swing.JLabel program_header;
+    private javax.swing.JPanel tab_firma;
+    private javax.swing.JPanel tab_hekim;
+    private javax.swing.JPanel tab_uzman;
+    private javax.swing.JTabbedPane tabbed_menu;
+    private javax.swing.JTextArea txt_hakkinda;
     // End of variables declaration//GEN-END:variables
 }
