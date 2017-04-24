@@ -1,9 +1,13 @@
+
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Ilkin
@@ -14,7 +18,7 @@ public class UserInterface extends javax.swing.JFrame {
      * Creates new form UserInterface
      */
     public UserInterface() {
-        
+
         initComponents();
         //setExtendedState(MAXIMIZED_BOTH);
     }
@@ -52,7 +56,7 @@ public class UserInterface extends javax.swing.JFrame {
         program_header.setText(" Ortak Sağlık ve Güvenlik Birimi Etkinlikleri Sistemi ");
 
         cmbBox_osgbList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        cmbBox_osgbList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OSGB 1", "OSGB 2", "OSGB 3" }));
+        cmbBox_osgbList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- OSGB seç -", "OSGB 1", "OSGB 2", "OSGB 3" }));
         cmbBox_osgbList.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbBox_osgbListItemStateChanged(evt);
@@ -70,11 +74,7 @@ public class UserInterface extends javax.swing.JFrame {
         tabbed_menu.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
         list_hekim.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        list_hekim.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Hekim 1", "Hekim 2", "Hekim 3", "Hekim 4" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        list_hekim.setModel(new DefaultListModel());
         list_hekim.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         list_hekim.setToolTipText("");
         list_hekim.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -102,7 +102,7 @@ public class UserInterface extends javax.swing.JFrame {
                 .addComponent(lbl_unvan, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(lbl_ad_soyad, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         info_hekimLayout.setVerticalGroup(
             info_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,7 +120,7 @@ public class UserInterface extends javax.swing.JFrame {
             tab_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tab_hekimLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(info_hekim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -144,7 +144,7 @@ public class UserInterface extends javax.swing.JFrame {
         tab_uzmanLayout.setHorizontalGroup(
             tab_uzmanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tab_uzmanLayout.createSequentialGroup()
-                .addContainerGap(486, Short.MAX_VALUE)
+                .addContainerGap(502, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(160, 160, 160))
         );
@@ -162,7 +162,7 @@ public class UserInterface extends javax.swing.JFrame {
         tab_firma.setLayout(tab_firmaLayout);
         tab_firmaLayout.setHorizontalGroup(
             tab_firmaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 705, Short.MAX_VALUE)
+            .addGap(0, 721, Short.MAX_VALUE)
         );
         tab_firmaLayout.setVerticalGroup(
             tab_firmaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -210,16 +210,40 @@ public class UserInterface extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmbBox_osgbListItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbBox_osgbListItemStateChanged
-        // TODO add your handling code here:
-        
-        txt_hakkinda.setText(String.valueOf(cmbBox_osgbList.getSelectedItem()));
+
+        // yeni model olusturulur
+        DefaultListModel listModel = (DefaultListModel) list_hekim.getModel();
+
+        // eski liste temizlenir
+        listModel.clear();
+        txt_hakkinda.setText("");
+        if (cmbBox_osgbList.getSelectedIndex() != 0) {
+            txt_hakkinda.setText(String.valueOf(cmbBox_osgbList.getSelectedItem()));
+
+            String[] osgb1_hekimler = {"Uzm. Dr. Tahir Mammadzada", "Dr. Abbas Aslan"};
+            String[] osgb2_hekimler = {"Dr. Strange", "Dr. Who"};
+            String[] osgb3_hekimler = {"Logman", "Hoca Nasrettin"};
+            
+            String[][] osgb_hekimler = {osgb1_hekimler, osgb2_hekimler, osgb3_hekimler};
+
+            // yeni modele degerler atanir
+            for (String value : osgb_hekimler[cmbBox_osgbList.getSelectedIndex()-1]) {
+
+                listModel.addElement(value);
+            }
+
+            // yeni model listeye set edilir
+            list_hekim.setModel(listModel);
+        }
+
+
     }//GEN-LAST:event_cmbBox_osgbListItemStateChanged
 
     private void list_hekimValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_list_hekimValueChanged
         // TODO add your handling code here:
-        lbl_ad_soyad.setText(list_hekim.getSelectedValue());
-        
-        
+        lbl_ad_soyad.setText(String.valueOf(list_hekim.getSelectedValue()));
+
+
     }//GEN-LAST:event_list_hekimValueChanged
 
     /**
