@@ -1,24 +1,27 @@
 
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
-import javax.swing.ListModel;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import com.mysql.jdbc.Statement;
 import com.sun.glass.events.KeyEvent;
-import java.awt.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractListModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import org.jdesktop.swingx.JXDatePicker;
+import javax.swing.ListModel;
+
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+ 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -35,6 +38,7 @@ public class UserInterface extends javax.swing.JFrame {
      * Creates new form UserInterface
      */
     Database db = new Database();
+    Hekim hekim;
 
     public UserInterface() {
 
@@ -118,11 +122,11 @@ public class UserInterface extends javax.swing.JFrame {
         lbl_is_bitis_tarihi = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        list_aylik_saglik_taramasi = new javax.swing.JList<>();
+        btn_muayene_form_olustur = new javax.swing.JButton();
+        btn_aylik_saglik_taramasi = new javax.swing.JButton();
+        btn_ise_yeni_giris = new javax.swing.JButton();
+        btn_rapor = new javax.swing.JButton();
         btn_returnHome1 = new javax.swing.JButton();
         panel_uzman = new javax.swing.JPanel();
         lbl_karsilama = new javax.swing.JLabel();
@@ -190,7 +194,7 @@ public class UserInterface extends javax.swing.JFrame {
                 .addGroup(info_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbl_ad_soyad, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
                     .addComponent(lbl_unvan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(257, Short.MAX_VALUE))
+                .addContainerGap(285, Short.MAX_VALUE))
         );
 
         splitPane_hekim.setRightComponent(info_hekim);
@@ -273,7 +277,7 @@ public class UserInterface extends javax.swing.JFrame {
             tab_uzmanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tab_uzmanLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(splitPane_uzman, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))
+                .addComponent(splitPane_uzman, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE))
         );
 
         tabbed_menu.addTab("Uzmanlar", tab_uzman);
@@ -336,7 +340,7 @@ public class UserInterface extends javax.swing.JFrame {
         );
         tab_firmaLayout.setVerticalGroup(
             tab_firmaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splitPane_firma, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+            .addComponent(splitPane_firma, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
         );
 
         tabbed_menu.addTab("Firmalar", null, tab_firma, "Çalışılan firmalar");
@@ -347,7 +351,7 @@ public class UserInterface extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Şifre:");
 
-        btn_logIn.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        btn_logIn.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btn_logIn.setText("Giriş");
         btn_logIn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -379,15 +383,13 @@ public class UserInterface extends javax.swing.JFrame {
                 .addGroup(panel_infoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txt_kullanici_adi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(panel_infoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_logIn)
-                    .addGroup(panel_infoLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addGroup(panel_infoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(txt_sifre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
+                    .addComponent(jLabel2)
+                    .addGroup(panel_infoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txt_sifre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_logIn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, 0))
         );
 
         javax.swing.GroupLayout panel_homeLayout = new javax.swing.GroupLayout(panel_home);
@@ -412,7 +414,7 @@ public class UserInterface extends javax.swing.JFrame {
                     .addGroup(panel_homeLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(btn_goCreateEventPage, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tabbed_menu))
         );
 
@@ -469,8 +471,6 @@ public class UserInterface extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel10.setText("İş Etkinliği bitiş:");
 
-        start_date.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel11.setText("İşyeri Hekimi gerekli yardımcı sayısı:");
         jLabel11.setToolTipText("");
@@ -496,8 +496,6 @@ public class UserInterface extends javax.swing.JFrame {
                 btn_createEventActionPerformed(evt);
             }
         });
-
-        end_date.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         txt_ucret.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txt_ucret.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -619,7 +617,7 @@ public class UserInterface extends javax.swing.JFrame {
         jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel13.setText("Başlangıc tarihi:");
 
-        lbl_firma.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_firma.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbl_firma.setText("Firma_ismi");
 
         jSeparator2.setPreferredSize(new java.awt.Dimension(50, 2));
@@ -633,28 +631,40 @@ public class UserInterface extends javax.swing.JFrame {
         jLabel17.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel17.setText("Aylık sağlık taraması yapılmamış çalışanlar:");
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        list_aylik_saglik_taramasi.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        list_aylik_saglik_taramasi.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(list_aylik_saglik_taramasi);
+
+        btn_muayene_form_olustur.setBackground(new java.awt.Color(204, 255, 204));
+        btn_muayene_form_olustur.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btn_muayene_form_olustur.setText("Muayene Gir");
+        btn_muayene_form_olustur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_muayene_form_olusturActionPerformed(evt);
+            }
         });
-        jScrollPane1.setViewportView(jList1);
 
-        jButton1.setBackground(new java.awt.Color(204, 255, 204));
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton1.setText("Muayene Gir");
+        btn_aylik_saglik_taramasi.setBackground(new java.awt.Color(255, 204, 255));
+        btn_aylik_saglik_taramasi.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btn_aylik_saglik_taramasi.setText("Aylık Sağlık Taraması");
+        btn_aylik_saglik_taramasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_aylik_saglik_taramasiActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(new java.awt.Color(255, 204, 255));
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton2.setText("Aylık Sağlık Taraması");
+        btn_ise_yeni_giris.setBackground(new java.awt.Color(153, 153, 255));
+        btn_ise_yeni_giris.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btn_ise_yeni_giris.setText("İşe Yeni Giriş Muayenesi");
 
-        jButton3.setBackground(new java.awt.Color(153, 153, 255));
-        jButton3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton3.setText("İşe Yeni Giriş Muayenesi");
-
-        jButton4.setBackground(new java.awt.Color(255, 64, 42));
-        jButton4.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jButton4.setText("Aylık Risk Analizi Raporu Oluştur");
+        btn_rapor.setBackground(new java.awt.Color(255, 64, 42));
+        btn_rapor.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btn_rapor.setText("Aylık Risk Analizi Raporu Oluştur");
+        btn_rapor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_raporActionPerformed(evt);
+            }
+        });
 
         btn_returnHome1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Ilkin\\Downloads\\back-button.png")); // NOI18N
         btn_returnHome1.setToolTipText("Ana Sayfaya dön");
@@ -671,6 +681,43 @@ public class UserInterface extends javax.swing.JFrame {
             .addGroup(panel_hekimLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_hekimLayout.createSequentialGroup()
+                        .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_hekimLayout.createSequentialGroup()
+                                .addGap(0, 10, Short.MAX_VALUE)
+                                .addComponent(jLabel17)
+                                .addGap(490, 490, 490))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_hekimLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_hekimLayout.createSequentialGroup()
+                        .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_hekimLayout.createSequentialGroup()
+                                .addComponent(btn_returnHome1)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_hekimLayout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panel_hekimLayout.createSequentialGroup()
+                                        .addComponent(lbl_hekim_karsilama, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lbl_tarih, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panel_hekimLayout.createSequentialGroup()
+                                        .addComponent(lbl_firma, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(panel_hekimLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btn_muayene_form_olustur, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 726, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btn_aylik_saglik_taramasi, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btn_ise_yeni_giris, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btn_rapor, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(10, 10, 10))
                     .addGroup(panel_hekimLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(jLabel13)
@@ -680,49 +727,17 @@ public class UserInterface extends javax.swing.JFrame {
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lbl_is_bitis_tarihi, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(104, 104, 104))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_hekimLayout.createSequentialGroup()
-                        .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_hekimLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 740, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel17)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_hekimLayout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap())
-                    .addGroup(panel_hekimLayout.createSequentialGroup()
-                        .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_returnHome1)
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 740, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panel_hekimLayout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbl_firma, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(panel_hekimLayout.createSequentialGroup()
-                                        .addComponent(lbl_hekim_karsilama, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
-                                        .addComponent(lbl_tarih, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(24, 24, 24))))
+                        .addGap(20, 20, 20))))
         );
         panel_hekimLayout.setVerticalGroup(
             panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_hekimLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_returnHome1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panel_hekimLayout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(lbl_tarih, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(lbl_hekim_karsilama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_tarih, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_returnHome1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_hekim_karsilama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(0, 0, 0)
                 .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_firma, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -742,13 +757,13 @@ public class UserInterface extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_hekimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_hekimLayout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_muayene_form_olustur, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_aylik_saglik_taramasi, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_ise_yeni_giris, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_rapor, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12))
         );
@@ -773,7 +788,7 @@ public class UserInterface extends javax.swing.JFrame {
             .addGroup(panel_uzmanLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lbl_karsilama, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(411, Short.MAX_VALUE))
+                .addContainerGap(418, Short.MAX_VALUE))
         );
 
         panel_parent.add(panel_uzman, "card4");
@@ -862,7 +877,19 @@ public class UserInterface extends javax.swing.JFrame {
                     + "values('" + firma_ismi + "'," + "( select id from hekimler where hekim_ad_soyad = '" + atanacak_hekim + "')," + yardimci_hekim + ","
                     + "( select id from uzmanlar where uzman_ad_soyad = '" + atanacak_uzman + "')," + yardimci_uzman + ",'" + s_time + "','" + e_time + "'," + ucret + ")";
 
-            db.query_udi(sorgu_etkinlik_olustur);
+            if(db.query_udi(sorgu_etkinlik_olustur))
+                {
+                   JOptionPane.showMessageDialog(panel_parent, "İş etkinliği başarıyla oluşturuldu", "İşlem tamamlandı!",JOptionPane.INFORMATION_MESSAGE);
+                   txt_firmaIsmi.setText("");
+                   txt_ucret.setText("");
+                   txt_yardimciHekimSayi.setText("0");
+                   txt_yardimciUzmanSayi.setText("0");
+                }
+            
+            else{
+                JOptionPane.showMessageDialog(panel_parent,"İş etkinliği oluşturulurken bir hata oluştu, lütfen yeniden deneyin", "İşlem tamamlanamadı!", JOptionPane.ERROR_MESSAGE);
+            }
+            
 
             System.out.println("Sorgu: " + sorgu_etkinlik_olustur);
         }
@@ -963,45 +990,71 @@ public class UserInterface extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(panel_parent, "Kullanıcı adı veya şifre hatalı!", "Hatalı Giriş!", JOptionPane.ERROR_MESSAGE);
 
             } else {
-                String alan = null;
+                String alan;
                 int bilgiler_id;
-                
+
                 while (login_result.next()) {
                     alan = login_result.getString("alan");
                     bilgiler_id = login_result.getInt("bilgiler_id");
 
                     // giris yapan analist ise uygun sayfaya yonlendir
-                    if (alan.equals("analist")) {
-                        panel_parent.removeAll();
-                        panel_parent.add(panel_createEvent);
-                        panel_parent.repaint();
-                        panel_parent.revalidate();
-                    } 
+                    switch (alan) {
+                        case "analist":
+                            panel_parent.removeAll();
+                            panel_parent.add(panel_createEvent);
+                            panel_parent.repaint();
+                            panel_parent.revalidate();
+                            break;
 
-                    // giris yapan doktor ise, doktor sayfasina yonlendir ve o doktorun bilgilerini gir
-                    else if (alan.equals("hekim")) {
-                        lbl_tarih.setText(str_today);
-                        System.out.println("Giris yapan id: "+bilgiler_id);
-                        Hekim hekim = new Hekim(db, bilgiler_id);
-                        
-                        // arayuze ilgili hekimlerin bilgilerinin yazilmasi
-                        lbl_hekim_karsilama.setText("Hoşgeldiniz, "+hekim.getAd_soyad());
-                        lbl_firma.setText(hekim.getCalisilan_firma());
-                        lbl_is_baslangic_tarihi.setText(hekim.getIs_baslangic_tarihi());
-                        lbl_is_bitis_tarihi.setText(hekim.getIs_bitis_tarihi());
-                        
-                        panel_parent.removeAll();
-                        panel_parent.add(panel_hekim);
-                        panel_parent.repaint();
-                        panel_parent.revalidate();
-                    } 
+                        case "hekim":
+                            lbl_tarih.setText(str_today);
+                            System.out.println("Giris yapan id: " + bilgiler_id);
+                             hekim = new Hekim(db, bilgiler_id);
 
-                    // giris yapan uzman ise, uzman sayfasina yonlendir ve o uzmannin bilgilerini gir
-                    else if (alan.equals("uzman")) {
-                        panel_parent.removeAll();
-                        panel_parent.add(panel_hekim);
-                        panel_parent.repaint();
-                        panel_parent.revalidate();
+                            // arayuze ilgili hekimlerin bilgilerinin yazilmasi
+                            lbl_hekim_karsilama.setText("Hoşgeldiniz, " + hekim.getAd_soyad());
+                            lbl_firma.setText(hekim.getCalisilan_firma());
+                            lbl_is_baslangic_tarihi.setText(hekim.getIs_baslangic_tarihi());
+                            lbl_is_bitis_tarihi.setText(hekim.getIs_bitis_tarihi());
+                            
+                            // veri tabanindan cekilen bilgilerin listede gosterilmesi
+                            
+                            
+                            // eger hekim herhangi bir firma ile calismiyor ise muayene girisi de yapamaz
+                            if(!hekim.calisiyormu())
+                            {
+                                btn_aylik_saglik_taramasi.setEnabled(false);
+                                btn_muayene_form_olustur.setEnabled(false);
+                                btn_rapor.setEnabled(false);
+                                btn_ise_yeni_giris.setEnabled(false);
+                                setArray2List(list_aylik_saglik_taramasi, null);
+                                list_aylik_saglik_taramasi.setEnabled(false);
+                            }
+                            else{
+                                
+                                btn_aylik_saglik_taramasi.setEnabled(true);
+                                btn_muayene_form_olustur.setEnabled(true);
+                                btn_rapor.setEnabled(true);
+                                btn_ise_yeni_giris.setEnabled(true);
+                                list_aylik_saglik_taramasi.setEnabled(true);
+                               setArray2List(list_aylik_saglik_taramasi, hekim.getAylik_calisanlar()); 
+                            }
+                            
+                            // hekim penceresini cagirma
+                            panel_parent.removeAll();
+                            panel_parent.add(panel_hekim);
+                            panel_parent.repaint();
+                            panel_parent.revalidate();
+                            break;
+
+                        case "uzman":
+                            panel_parent.removeAll();
+                            panel_parent.add(panel_hekim);
+                            panel_parent.repaint();
+                            panel_parent.revalidate();
+                            break;
+                        default:
+                            break;
                     }
                     break;
                 }
@@ -1035,15 +1088,89 @@ public class UserInterface extends javax.swing.JFrame {
         btn_returnHomeActionPerformed(evt);
     }//GEN-LAST:event_btn_returnHome1ActionPerformed
 
+    private void btn_muayene_form_olusturActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_muayene_form_olusturActionPerformed
+        // TODO add your handling code here:
+        
+         new MuayeneGir(db).setVisible(true); // Main Form to show after the Login Form..
+        
+        
+    }//GEN-LAST:event_btn_muayene_form_olusturActionPerformed
+
+    private void btn_aylik_saglik_taramasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aylik_saglik_taramasiActionPerformed
+        // TODO add your handling code here:
+        
+        if(list_aylik_saglik_taramasi.isSelectionEmpty())
+        {
+            JOptionPane.showMessageDialog(panel_parent, "Lütfen listeden aylık sağlık taraması yapılacak çalışanı seçin", "Seçim yapın", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            String tmp_ad_soyad = list_aylik_saglik_taramasi.getSelectedValue();
+            
+            String tmp_sorgu = "Update calisan set son_aylik_tarama = now() where Ad_soyad = '"+tmp_ad_soyad+"'";
+            
+            if (db.query_udi(tmp_sorgu)) {
+                
+                hekim.updateList(db);
+                setArray2List(list_aylik_saglik_taramasi, hekim.getAylik_calisanlar());
+                JOptionPane.showMessageDialog(panel_parent, tmp_ad_soyad + " isimli çalışanın aylık sağlık taraması tamamlanmıştır.", "İşlem tamamlandı", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                System.err.println("Olmadi!");
+            }
+        }
+        
+    }//GEN-LAST:event_btn_aylik_saglik_taramasiActionPerformed
+
+    private void btn_raporActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_raporActionPerformed
+        try {
+            // TODO add your handling code here:
+
+            if (hekim.SaglikRiskiRaporu()) {
+                JOptionPane.showMessageDialog(panel_parent, "Aylık Sağlık Riski Analiz Raporunuz Başarıyla Oluşturuldu!", "İşlem Tamamlandı", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(panel_parent, "Rapor oluşturulurken bir hata oldu!", "İşlem Başarısız", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btn_raporActionPerformed
+
+    ///////////////////////////////////////////////////////////////////////////
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~ MY functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    ///////////////////////////////////////////////////////////////////////////
+    
+    
+    
+    
     private boolean isInteger(java.awt.event.KeyEvent evt) {
 
         char c = evt.getKeyChar();
 
-        if ((!Character.isDigit(c) || c == KeyEvent.VK_BACKSPACE || c == KeyEvent.VK_DELETE)) {
-            return true;
+        return !Character.isDigit(c) || c == KeyEvent.VK_BACKSPACE || c == KeyEvent.VK_DELETE;
+    }
+
+    
+    private void setArray2List(JList jlist, ArrayList<String> arraylist) {
+
+        if (arraylist == null) {
+            jlist.removeAll();
         } else {
-            return false;
+            DefaultListModel<String> model = new DefaultListModel<>();
+            for (String l : arraylist) {
+                model.addElement(l);
+            }
+
+            jlist.setModel(model);
         }
+
+    }
+    
+    
+    private DefaultListModel<String> createListModel(ArrayList<String> list) {
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for (String l : list) {
+            model.addElement(l);
+        }
+        return model;
     }
 
     /**
@@ -1062,29 +1189,27 @@ public class UserInterface extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
+        //</editor-fold>
+
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UserInterface().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new UserInterface().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_aylik_saglik_taramasi;
     private javax.swing.JButton btn_createEvent;
     private javax.swing.JButton btn_goCreateEventPage;
+    private javax.swing.JButton btn_ise_yeni_giris;
     private javax.swing.JButton btn_logIn;
+    private javax.swing.JButton btn_muayene_form_olustur;
+    private javax.swing.JButton btn_rapor;
     private javax.swing.JButton btn_returnHome;
     private javax.swing.JButton btn_returnHome1;
     private javax.swing.JButton btn_updateList;
@@ -1094,10 +1219,6 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JPanel info_fima;
     private javax.swing.JPanel info_hekim;
     private javax.swing.JPanel info_uzman;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1113,7 +1234,6 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -1129,6 +1249,7 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_unvan;
     private javax.swing.JLabel lbl_unvan2;
     private javax.swing.JLabel lbl_unvan6;
+    private javax.swing.JList<String> list_aylik_saglik_taramasi;
     private javax.swing.JList<String> list_firma;
     private javax.swing.JList<String> list_hekim;
     private javax.swing.JList<String> list_hekim5;
