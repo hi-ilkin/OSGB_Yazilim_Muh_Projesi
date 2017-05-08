@@ -1,4 +1,5 @@
 
+import com.itextpdf.text.pdf.PdfName;
 import javax.swing.JOptionPane;
 
 /*
@@ -18,9 +19,14 @@ public class MuayeneGir extends javax.swing.JFrame {
      */
     
     Database db;
-    public MuayeneGir(Database db) {
+    String firma;
+    
+    
+    public MuayeneGir(Database db, String firma) {
         
         this.db = db;
+        this.firma = firma;
+        
         initComponents();
     }
 
@@ -137,8 +143,8 @@ public class MuayeneGir extends javax.swing.JFrame {
         String sorgu;
         if(!txt_muayene_kimlik_bilgisi.getText().equals(""))
         {
-            sorgu = "Insert into muayene(calisan_id,teshis,recete) values ('"+
-                    txt_muayene_kimlik_bilgisi.getText()+"','"+txt_muayene_teshis.getText()+"','"+txt_muayene_recete.getText()+"')";
+            sorgu = "Insert into muayene(calisan_id,teshis,recete,calisan_firma) values ('"+
+                    txt_muayene_kimlik_bilgisi.getText()+"','"+txt_muayene_teshis.getText()+"','"+txt_muayene_recete.getText()+"','"+ firma +"')";
             db.query_udi(sorgu);
             
             JOptionPane.showMessageDialog(rootPane, "Muayene kaydı başarıyla oluşturuldu.", "İşlem tamamlandı",JOptionPane.INFORMATION_MESSAGE);

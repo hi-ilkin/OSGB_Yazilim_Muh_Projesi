@@ -11,8 +11,6 @@ import com.itextpdf.text.pdf.CMYKColor;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.VerticalPositionMark;
-import java.awt.Panel;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.sql.ResultSet;
@@ -22,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -33,7 +30,7 @@ import javax.swing.JOptionPane;
  *
  * @author Ilkin
  */
-public class Hekim {
+public class Uzman {
 
     Database db;
     ResultSet result_bilgiler;
@@ -56,29 +53,29 @@ public class Hekim {
 
 //    private String[] hastalar = {};
     // aylik saglik taramasindan gecmeyen calisanlar
-    private ArrayList<String> alist_aylik_taramadan_gecmeyen;
+    private ArrayList<String> list_senelik_guvenlik_egitimi;
 
-    String sorgu_hekim_bilgileri;
+    String sorgu_uzman_bilgileri;
     String sorgu_is_bilgileri;
 
-    public Hekim(Database db, int id) {
+    public Uzman(Database db, int id) {
 
         this.id = id;
         this.db = db;
         // sorgular 
-        sorgu_hekim_bilgileri = "Select hekim_ad_soyad from hekimler where id = " + id;
+        sorgu_uzman_bilgileri = "Select uzman_ad_soyad from uzmanlar where id = " + id;
         sorgu_is_bilgileri = "Select firma, baslangic_tarihi, bitis_tarihi from is_etkinlikleri "
-                + "where hekim_id = " + id + " and ('" + str_today + "' BETWEEN Baslangic_tarihi and Bitis_tarihi)";
+                + "where uzman_id = " + id + " and ('" + str_today + "' BETWEEN Baslangic_tarihi and Bitis_tarihi)";
 
-        result_bilgiler = db.query(sorgu_hekim_bilgileri);
+        result_bilgiler = db.query(sorgu_uzman_bilgileri);
         result_is_bilgileri = db.query(sorgu_is_bilgileri);
 
         try {
             while (result_bilgiler.next()) {
-                ad_soyad = result_bilgiler.getString("hekim_ad_soyad");
+                ad_soyad = result_bilgiler.getString("uzman_ad_soyad");
             }
 
-            // girilen tarihler arasinda hekimin calistigi bir firma var mi?
+            // girilen tarihler arasinda uzmanın calistigi bir firma var mi?
             if (result_is_bilgileri.isBeforeFirst()) {
 
                 while (result_is_bilgileri.next()) {
@@ -106,9 +103,9 @@ public class Hekim {
     public void updateList(Database db) {
 
         String sorgu_calisanlar;
-        alist_aylik_taramadan_gecmeyen = new ArrayList<>();
+        list_senelik_guvenlik_egitimi = new ArrayList<>();
         sorgu_calisanlar = "select Ad_soyad from calisan where id_calistigi_firma = '"
-                + calisilan_firma + "' and  son_aylik_tarama <= NOW() - INTERVAL 1 MONTH";
+                + calisilan_firma + "' and  son_aylik_tarama <= NOW() - INTERVAL 12 MONTH";
 
         ResultSet result_calisanlar = db.query(sorgu_calisanlar);
 
@@ -116,11 +113,11 @@ public class Hekim {
 
             if (result_calisanlar.isBeforeFirst()) {
                 while (result_calisanlar.next()) {
-                    alist_aylik_taramadan_gecmeyen.add(result_calisanlar.getString("ad_soyad"));
+                    list_senelik_guvenlik_egitimi.add(result_calisanlar.getString("ad_soyad"));
                 }
 
             } else {
-                alist_aylik_taramadan_gecmeyen = null;
+                list_senelik_guvenlik_egitimi.add("Aylık sağlık taramaları tam");
             }
 
         } catch (Exception e) {
@@ -130,6 +127,10 @@ public class Hekim {
 
     public boolean calisiyormu() {
         return calisiyormu;
+    }
+
+    public void calisiyormu(boolean calisiyormu) {
+        this.calisiyormu = calisiyormu;
     }
 
     public void muayeneEt() {
@@ -145,7 +146,8 @@ public class Hekim {
 
     }
 
-    public boolean SaglikRiskiRaporu() throws SQLException {
+    // TODO: SENELIK RAPOR OLACAK
+    public boolean senelikRapor() throws SQLException {
 
         Document document = new Document();
         
@@ -155,7 +157,7 @@ public class Hekim {
         String sirket2 = calisilan_firma.toUpperCase();
         
         int toplam_calisan_sayi = 0;
-        int aylik_taramadan_gecmeyen = alist_aylik_taramadan_gecmeyen.size();
+        int aylik_taramadan_gecmeyen = list_senelik_guvenlik_egitimi.size();
         
         int yeni_ise_giris_yapilmayan_sayi = 0;
         
@@ -167,6 +169,8 @@ public class Hekim {
         ResultSet result_yeni_ise_giris = db.query(yeni_ise_giris_yapilmadi_sorgu);
         
         try {
+            
+            
             
             while(result_calisan_sayi.next())
             {
@@ -186,7 +190,7 @@ public class Hekim {
             Font font_header = FontFactory.getFont(FontFactory.COURIER, 18 , Font.BOLD, new CMYKColor(0, 255, 255, 0));
             Font font_sirket = FontFactory.getFont(FontFactory.COURIER, 14, new BaseColor(0, 0, 0));
             Font font_sirket2 = FontFactory.getFont(FontFactory.COURIER, 16,Font.BOLD, new BaseColor(0, 0, 0));
-            Font font_tarih = FontFactory.getFont(FontFactory.COURIER, 14, new BaseColor(0,0,0));
+            
             
             Paragraph header = new Paragraph(rapor_basligi, font_header);
             header.setAlignment(Element.ALIGN_CENTER);
@@ -199,111 +203,14 @@ public class Hekim {
             document.add(Chunk.NEWLINE);
             
             // firma ismini ekle
-            Paragraph sirket = new Paragraph(sirket1, font_sirket);          
+            Paragraph sirket = new Paragraph(sirket1, font_sirket);
             sirket.add(new Chunk(sirket2, font_sirket2));
-            
-            Chunk glue = new Chunk(new VerticalPositionMark());
-            sirket.add(new Chunk(glue));
-            Chunk tarih = new Chunk(str_today, font_tarih);
-            sirket.add(tarih);
             document.add(sirket);
             
             // bosluk ekle
             document.add(Chunk.NEWLINE);
             document.add(Chunk.NEWLINE);
-
-            Font font_section_header = FontFactory.getFont(FontFactory.COURIER, 14, Font.BOLD, new BaseColor(0, 0, 0));
             
-            
-            // section 1 - bu ay muayeneden gecenler
-            document.add(new Paragraph("Son bir ayda muayene edilen calisanlar:", font_section_header));
-            String sorgu_bu_ay_muayene_olan = "SELECT c.ad_soyad, m.calisan_id, m.teshis, m.tarih FROM calisan c, muayene m where m.calisan_firma = '"+calisilan_firma+"' and tarih >= NOW() - INTERVAL 1 MONTH  and c.id = m.calisan_id";
-               
-            ResultSet result_muayene_olan = db.query(sorgu_bu_ay_muayene_olan);
-            
-            // tablo 1 olustur    
-            PdfPTable table_bu_ay_muayene = new PdfPTable(4); // 4 columns.
-            table_bu_ay_muayene.setWidthPercentage(100); //Width 100%
-            table_bu_ay_muayene.setSpacingBefore(10f); //Space before table
-            table_bu_ay_muayene.setSpacingAfter(10f); //Space after table
-            
-            
-            //Set Column widths
-            float[] columnWidths_muayene = {1f, 3f, 3f, 2f};
-            table_bu_ay_muayene.setWidths(columnWidths_muayene);
-            
-            
-            // tablo basliklarini olusturma
-            Font font_table_header = FontFactory.getFont(FontFactory.COURIER, 14, Font.BOLD);
-            
-            PdfPCell cell_0 = new PdfPCell(new Paragraph("ID",font_table_header));
-            cell_0.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell_0.setPaddingLeft(10);
-            cell_0.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-            PdfPCell cell_01 = new PdfPCell(new Paragraph("Ad Soyad",font_table_header));
-            cell_01.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell_01.setPaddingLeft(10);
-            cell_01.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            
-            PdfPCell cell_02 = new PdfPCell(new Paragraph("Teshis",font_table_header));
-            cell_02.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell_02.setPaddingLeft(10);
-            cell_02.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            
-            PdfPCell cell_03 = new PdfPCell(new Paragraph("Muayene Tarihi",font_table_header));
-            cell_03.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell_03.setPaddingLeft(10);
-            cell_03.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            
-            table_bu_ay_muayene.addCell(cell_0);
-            table_bu_ay_muayene.addCell(cell_01);
-            table_bu_ay_muayene.addCell(cell_02);
-            table_bu_ay_muayene.addCell(cell_03);
-            
-            // veri tabanindan elde edilen degerler ile tablonun doldurulmasi
-            if (result_muayene_olan.isBeforeFirst()) {
-                while (result_muayene_olan.next()) {
-                    
-                    int calisan_id = result_muayene_olan.getInt("m.calisan_id");
-                    String muayene_ad_soyad = result_muayene_olan.getString("c.ad_soyad");
-                    String muayene_teshis = result_muayene_olan.getString("m.teshis");
-                    String muayene_tarihi = result_muayene_olan.getDate("m.tarih").toString();
-                    
-                    
-                    PdfPCell cell_10 = new PdfPCell(new Paragraph(String.valueOf(calisan_id)));
-                    cell_10.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell_10.setPaddingLeft(10);
-                    cell_10.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-                    PdfPCell cell_11 = new PdfPCell(new Paragraph(muayene_ad_soyad));
-                    cell_11.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell_11.setPaddingLeft(10);
-                    cell_11.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-                    PdfPCell cell_12 = new PdfPCell(new Paragraph(muayene_teshis));
-                    cell_12.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell_12.setPaddingLeft(10);
-                    cell_12.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-                    PdfPCell cell_13 = new PdfPCell(new Paragraph(muayene_tarihi));
-                    cell_13.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell_13.setPaddingLeft(10);
-                    cell_13.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-                    table_bu_ay_muayene.addCell(cell_10);
-                    table_bu_ay_muayene.addCell(cell_11);
-                    table_bu_ay_muayene.addCell(cell_12);
-                    table_bu_ay_muayene.addCell(cell_13);
-                }
-            }
-            
-            // muayene tablosunun eklenmesi
-            document.add(table_bu_ay_muayene);
-            
-            document.add(Chunk.NEWLINE);
-            // section 1 - bu ay muayeneden gecenler
-            document.add(new Paragraph("Aylik tarama ve ise giris tarama bilgileri:", font_section_header));
             // tablo olustur    
             PdfPTable table = new PdfPTable(2); // 2 columns.
             table.setWidthPercentage(100); //Width 100%
@@ -362,7 +269,8 @@ public class Hekim {
             table.addCell(cell_4);
             table.addCell(cell_41);
             
-            Font font_last_row = FontFactory.getFont(FontFactory.TIMES, 14, Font.BOLD, new BaseColor(0, 0, 0));
+            
+             Font font_last_row = FontFactory.getFont(FontFactory.TIMES, 14, Font.BOLD, new BaseColor(0, 0, 0));
             
             PdfPCell cell_5 = new PdfPCell(new Paragraph("Toplam calisan sayi: "));
             cell_5.setPaddingLeft(10);
@@ -377,18 +285,12 @@ public class Hekim {
             table.addCell(cell_51);
             
             document.add(table);
-            
 
             /* ~~~~~~~~~~~~~~~  Tablo bitti ~~~~~~~~~~~~~~~~~~~~~*/
             
             // bosluk ekle
             document.add(Chunk.NEWLINE);
-            document.add(Chunk.NEWLINE);
-            
-            Paragraph hekim_ad_soyad = new Paragraph(this.ad_soyad);
-            hekim_ad_soyad.setAlignment(Element.ALIGN_RIGHT);
-            
-            document.add(hekim_ad_soyad);
+
             document.close();
             writer.close();
             return true;
@@ -446,11 +348,11 @@ public class Hekim {
     }
 
     public ArrayList<String> getAylik_calisanlar() {
-        return alist_aylik_taramadan_gecmeyen;
+        return list_senelik_guvenlik_egitimi;
     }
 
     public void setAylik_calisanlar(ArrayList<String> aylik_calisanlar) {
-        this.alist_aylik_taramadan_gecmeyen = aylik_calisanlar;
+        this.list_senelik_guvenlik_egitimi = aylik_calisanlar;
     }
 
 }
