@@ -48,24 +48,25 @@ public class Database {
             return rs;
 
         } catch (Exception e) {
-            System.out.println("Some error occured during executing query: "+e);
+            System.out.println("Some error occured during executing query: " + e);
         }
 
         return null;
     }
-    
-    
-    public void query_udi(String sorgu){
-                try {
+
+    public boolean query_udi(String sorgu) {
+        try {
             st = (Statement) con.createStatement();
-            
+
             // create, update, insert, delete gibi data manipulation query`ler executeUpdate ile calistirilir
             st.executeUpdate(sorgu);
-            System.out.println("Update/delete/insert query executed");
-
-        } catch (Exception e) {
-                    System.err.println("Some error occured during execution of insert/delete/update: "+ e);
+            System.out.println("Query executed: "+ sorgu);
             
+            return true;
+            
+        } catch (Exception e) {
+            System.err.println("Some error occured during execution of insert/delete/update: " + e);
+           return false;
         }
 
     }
