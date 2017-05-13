@@ -77,7 +77,8 @@ public class Database {
         try {
             System.out.println("Destroy called");
             System.out.println(con);
-            st.close();
+            if(st != null)
+                st.close();
             con.close();
 
         } catch (SQLException ex) {
